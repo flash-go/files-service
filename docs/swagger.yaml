@@ -1,0 +1,246 @@
+basePath: /
+definitions:
+  dto.AdminCreateDirRequest:
+    properties:
+      path:
+        type: string
+    type: object
+  dto.AdminDeleteDirRequest:
+    properties:
+      path:
+        type: string
+    type: object
+  dto.AdminDeleteFileRequest:
+    properties:
+      path:
+        type: string
+    type: object
+  dto.AdminListFilesRequest:
+    properties:
+      path:
+        type: string
+    type: object
+  dto.AdminRenameDirRequest:
+    properties:
+      new_path:
+        type: string
+      old_path:
+        type: string
+    type: object
+  dto.AdminRenameFileRequest:
+    properties:
+      new_path:
+        type: string
+      old_path:
+        type: string
+    type: object
+  dto.FileResponse:
+    properties:
+      is_dir:
+        type: boolean
+      mime_type:
+        type: string
+      name:
+        type: string
+      path:
+        type: string
+      size:
+        type: integer
+    type: object
+info:
+  contact: {}
+  title: files-service
+  version: "1.0"
+paths:
+  /admin/dirs:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Delete dir (admin)
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AdminDeleteDirRequest'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: 'Possible error codes: bad_request, bad_request:invalid_path,
+            bad_request:dir_not_found'
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete dir (admin)
+      tags:
+      - dirs
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Rename dir (admin)
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AdminRenameDirRequest'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: 'Possible error codes: bad_request, bad_request:invalid_old_path,
+            bad_request:invalid_new_path, bad_request:old_dir_not_found, bad_request:new_dir_exist'
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Rename dir (admin)
+      tags:
+      - dirs
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create dir (admin)
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AdminCreateDirRequest'
+      produces:
+      - text/plain
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: 'Possible error codes: bad_request, bad_request:invalid_path,
+            bad_request:dir_exist'
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create dir (admin)
+      tags:
+      - dirs
+  /admin/files:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Delete file (admin)
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AdminDeleteFileRequest'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: 'Possible error codes: bad_request, bad_request:invalid_path,
+            bad_request:file_not_found'
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete file (admin)
+      tags:
+      - files
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Rename file (admin)
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AdminRenameFileRequest'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: 'Possible error codes: bad_request, bad_request:invalid_old_path,
+            bad_request:invalid_new_path, bad_request:old_file_not_found, bad_request:new_file_exist'
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Rename file (admin)
+      tags:
+      - files
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: File to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: Metadata
+        in: formData
+        name: meta
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: 'Possible error codes: bad_request, bad_request:dir_not_found,
+            bad_request:file_exist'
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create file (admin)
+      tags:
+      - files
+  /admin/files/list:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: List files (admin)
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AdminListFilesRequest'
+      produces:
+      - application/json
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.FileResponse'
+            type: array
+        "400":
+          description: 'Possible error codes: bad_request, bad_request:invalid_path'
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: List files (admin)
+      tags:
+      - files
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
