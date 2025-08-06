@@ -119,7 +119,10 @@ func main() {
 	)
 
 	// Set max request body size
-	httpServer.SetServerMaxRequestBodySize(1024 * 1024 * 1024 * 8) // 8GB
+	httpServer.SetServerMaxRequestBodySize(serverMaxRequestBodySize)
+
+	// Set read timeout
+	httpServer.SetServerReadTimeout(serverReadTimeout)
 
 	// Create repository
 	dirsRepository := dirsRepositoryAdapterImpl.New(
