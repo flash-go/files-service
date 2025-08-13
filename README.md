@@ -23,15 +23,20 @@ task env
 
 ### 3. Setup .env.server
 
-| Environment Variable | Description                                                                 |
-|----------------------|-----------------------------------------------------------------------------|
-| CONSUL_AGENT         | Full address (host:port) of the Consul agent (e.g., `localhost:8500`).      |
-| SERVICE_NAME         | Name used to register the service in Consul.                                |
-| SERVICE_HOST         | Host address under which the service is accessible for Consul registration. |
-| SERVICE_PORT         | Port number under which the service is accessible for Consul registration.  |
-| SERVER_HOST          | Host address the HTTP server should bind to (e.g., `0.0.0.0`).              |
-| SERVER_PORT          | Port number the HTTP server should listen on (e.g., `8080`).                |
-| LOG_LEVEL            | Logging level. See the log level table for details.                         |
+| Environment Variable        | Description                                                                               |
+|-----------------------------|-------------------------------------------------------------------------------------------|
+| CONSUL_ADDR                 | Full address (host:port) of the Consul agent (e.g., `localhost:8500`).                    |
+| CONSUL_CA_CRT               | Base64 CA certificate file used to verify the Consul server's TLS certificate.            |
+| CONSUL_CLIENT_CRT           | Base64 client certificate file used for mTLS authentication with Consul.                  |
+| CONSUL_CLIENT_KEY           | Base64 private key corresponding to `CONSUL_CLIENT_CRT` for mTLS authentication.          |
+| CONSUL_INSECURE_SKIP_VERIFY | If set to `true`, disables TLS certificate verification (not recommended for production). |
+| CONSUL_TOKEN                | Consul ACL token for authenticating requests to the Consul agent or server.               |
+| SERVICE_NAME                | Name used to register the service in Consul.                                              |
+| SERVICE_HOST                | Host address under which the service is accessible for Consul registration.               |
+| SERVICE_PORT                | Port number under which the service is accessible for Consul registration.                |
+| SERVER_HOST                 | Host address the HTTP server should bind to (e.g., `0.0.0.0`).                            |
+| SERVER_PORT                 | Port number the HTTP server should listen on (e.g., `8080`).                              |
+| LOG_LEVEL                   | Logging level. See the log level table for details.                                       |
 
 #### Log Levels
 
@@ -49,14 +54,22 @@ task env
 
 ### 4. Setup .env.seed
 
-| Environment Variable    | Description                                                                                 |
-|-------------------------|---------------------------------------------------------------------------------------------|
-| CONSUL_AGENT            | Full address (host:port) of the Consul agent (e.g., `localhost:8500`).                      |
-| SERVICE_NAME            | The name of the service in Consul used to retrieve database connection configuration.       |
-| OTEL_COLLECTOR_GRPC     | Address of the OpenTelemetry Collector for exporting traces via gRPC.                       |
-| USERS_SERVICE_NAME      | User Management Service Name.                                                               |
-| USERS_ADMIN_ROLE        | Administrator Role ID.                                                                      |
-| STORE_LOCAL_ROOT_PATH   | Root path of local filesystem for store files.                                              |
+| Environment Variable        | Description                                                                               |
+|-----------------------------|-------------------------------------------------------------------------------------------|
+| CONSUL_ADDR                 | Full address (host:port) of the Consul agent (e.g., `localhost:8500`).                    |
+| CONSUL_CA_CRT               | Base64 CA certificate file used to verify the Consul server's TLS certificate.            |
+| CONSUL_CLIENT_CRT           | Base64 client certificate file used for mTLS authentication with Consul.                  |
+| CONSUL_CLIENT_KEY           | Base64 private key corresponding to `CONSUL_CLIENT_CRT` for mTLS authentication.          |
+| CONSUL_INSECURE_SKIP_VERIFY | If set to `true`, disables TLS certificate verification (not recommended for production). |
+| CONSUL_TOKEN                | Consul ACL token for authenticating requests to the Consul agent or server.               |
+| SERVICE_NAME                | Name used to register the service in Consul.                                              |
+| OTEL_COLLECTOR_GRPC         | Address of the OpenTelemetry Collector for exporting traces via gRPC.                     |
+| OTEL_COLLECTOR_CA_CRT       | Base64 ca.crt of the OpenTelemetry Collector.                                             |
+| OTEL_COLLECTOR_CLIENT_CRT   | Base64 client.crt of the OpenTelemetry Collector.                                         |
+| OTEL_COLLECTOR_CLIENT_KEY   | Base64 client.key of the OpenTelemetry Collector.                                         |
+| USERS_SERVICE_NAME          | User Management Service Name.                                                             |
+| USERS_ADMIN_ROLE            | Administrator Role ID.                                                                    |
+| STORE_LOCAL_ROOT_PATH       | Root path of local filesystem for store files.                                            |
 
 ### 5. Run seed
 
