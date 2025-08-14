@@ -42,8 +42,6 @@ definitions:
         type: string
       name:
         type: string
-      path:
-        type: string
       size:
         type: integer
     type: object

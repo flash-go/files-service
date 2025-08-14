@@ -9,9 +9,7 @@ package main
 // @name Authorization
 
 import (
-	"log"
 	"os"
-	"strconv"
 
 	// Framework
 	//
@@ -78,14 +76,8 @@ func main() {
 	// Create logger service
 	loggerService := logger.NewConsole()
 
-	// Convert log level to int
-	logLevel, err := strconv.Atoi(os.Getenv("LOG_LEVEL"))
-	if err != nil {
-		log.Fatalf("invalid log level")
-	}
-
 	// Set log level
-	loggerService.SetLevel(logLevel)
+	loggerService.SetLevel(config.GetEnvInt("LOG_LEVEL"))
 
 	// Create telemetry service
 	telemetryService := telemetry.NewSecureGrpc(cfg)
@@ -133,15 +125,18 @@ func main() {
 	// Set read timeout
 	httpServer.SetServerReadTimeout(serverReadTimeout)
 
+	// Get local store root path
+	localStoreRootPath := cfg.Get(internalConfig.StoreLocalRootPathOptKey)
+
 	// Create repository
 	dirsRepository := dirsRepositoryAdapterImpl.New(
 		&dirsRepositoryAdapterImpl.Config{
-			StoreLocalRootPath: cfg.Get(internalConfig.StoreLocalRootPathOptKey),
+			StoreLocalRootPath: localStoreRootPath,
 		},
 	)
 	filesRepository := filesRepositoryAdapterImpl.New(
 		&filesRepositoryAdapterImpl.Config{
-			StoreLocalRootPath: cfg.Get(internalConfig.StoreLocalRootPathOptKey),
+			StoreLocalRootPath: localStoreRootPath,
 		},
 	)
 
@@ -251,31 +246,19 @@ func main() {
 			),
 		)
 
-	// Convert service port to int
-	servicePort, err := strconv.Atoi(os.Getenv("SERVICE_PORT"))
-	if err != nil || servicePort <= 0 {
-		log.Fatalf("invalid service port")
-	}
-
 	// Register service
 	if err := httpServer.RegisterService(
 		os.Getenv("SERVICE_NAME"),
 		os.Getenv("SERVICE_HOST"),
-		servicePort,
+		config.GetEnvInt("SERVICE_PORT"),
 	); err != nil {
 		loggerService.Log().Err(err).Send()
-	}
-
-	// Convert server port to int
-	serverPort, err := strconv.Atoi(os.Getenv("SERVER_PORT"))
-	if err != nil || serverPort <= 0 {
-		log.Fatal("invalid server port")
 	}
 
 	// Listen http server
 	if err := <-httpServer.Listen(
 		os.Getenv("SERVER_HOST"),
-		serverPort,
+		config.GetEnvInt("SERVER_PORT"),
 	); err != nil {
 		loggerService.Log().Err(err).Send()
 	}
